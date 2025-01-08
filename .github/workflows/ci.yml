@@ -1,35 +1,46 @@
 # This workflow will build a Java project with Gradle
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
 
-name: Java CI with Gradle
+#this is the yml file that defines the ci/cd workflow or pipeline
 
+name: Java CI with Gradle #name of the workflow
+
+#this workflow is triggered on 2 github events, either while pushing to main branch or pr from main branch
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
-jobs:
+#the following execute when either of the above 2 github events occur
+jobs: #name of job
   build-java:
 
     runs-on: ubuntu-latest
     
-    steps:
+    steps: #similar to stages block in jenkins
+    #predefined actions found on https://github.com/actions, can be used with versions
+
+    #Action for checking out a repo
     - uses: actions/checkout@v2
 
-    - name: Set up JDK 1.8
+    #Action for Setting up your GitHub Actions workflow with a specific version of Java
+    - name: Set up JDK 1.8 #optional name attribute for this step in the workflow
       uses: actions/setup-java@v1
-      with:
-        java-version: 1.8
+      with: #with attribute to use specific parameters
+        java-version: 1.8 #define the version of Java
 
+    #Action to 'run' a command
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
+    #Action to build application with gradle
     - name: Build with Gradle
       run: ./gradlew build
 
+    #Action to build application with gradle and push Docker image to dockerhub
     - name: Build and Push Docker Image
-      uses: mr-smithers-excellent/docker-build-push@v4
+      uses: mr-smithers-excellent/docker-build-push@v4 #using predefined action
       with:
         image: nanajanashia/demo-app
         registry: docker.io
